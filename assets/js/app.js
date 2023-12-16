@@ -5,7 +5,7 @@ function calculateFederalIncomeTaxAmount() {
     let taxIncome = income - standardDeduction;
 
     const taxBrackets = [0, 11600, 47150, 100525, 191950, 243725, 609350, Infinity];
-    const taxRates = [0.10, 0.12, 0.22, 0.25, 0.28, 0.32, 0.35, 0.37];
+    const taxRates = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
     
     let totalTax = 0;
   
