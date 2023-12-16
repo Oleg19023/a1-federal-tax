@@ -2,27 +2,30 @@ function calculateFederalIncomeTaxAmount() {
     const incomeInput = document.getElementById("incomeInput");
     const income = parseFloat(incomeInput.value) || 0;
     const standardDeduction = 14600;
-    const taxBrackets = [
-      { min: 0, max: 11600, rate: 0.10 },
-      { min: 11601, max: 47150, rate: 0.12 },
-      { min: 47151, max: 100525, rate: 0.22 },
-      { min: 100526, max: 191950, rate: 0.24 },
-      { min: 191951, max: 243725, rate: 0.32 },
-      { min: 243726, max: 609350, rate: 0.35 },
-      { min: 609351, rate: 0.37 }
-    ];
-  
+    let taxIncome = income - standardDeduction;
+
+    const taxBrackets = [0, 11600, 47150, 100525, 191950, 243725, 609350, Infinity];
+    const taxRates = [0.10, 0.12, 0.22, 0.25, 0.28, 0.32, 0.35, 0.37];
+    
     let totalTax = 0;
-    let taxableIncome = income - standardDeduction;
   
-    for (const bracket of taxBrackets) {
-      if (taxableIncome > bracket.min) {
-        let taxInThisBracket = Math.min(taxableIncome, bracket.max) * bracket.rate;
-        taxableIncome -= taxInThisBracket;
-        totalTax += taxInThisBracket;
-      }
+    if (taxIncome > 0) {
+        for (let i = 0; i < taxBrackets.length; i++) {
+
+            // Brackets
+            let lowBracket = taxBrackets[i];
+            let UpBracket = taxBrackets[i + 1];
+            let rate = taxRates[i];
+
+            if (taxIncome > UpBracket) {
+                totalTax += (UpBracket - lowBracket) * rate;
+            } else {
+                totalTax = Math.round((totalTax + ((taxIncome - lowBracket) * rate)) * 100) / 100;
+                break;
+            }
+        }
     }
-  
+
     const resultElement = document.getElementById("result");
     resultElement.textContent = `$ ${totalTax.toFixed(2)}`;
-  }
+}
